@@ -68,10 +68,11 @@ UserPreOoaInitializationCalloutf( void )
  * xtUML application analysis state models to start consuming events.
  */
 #include <string.h>
+#include "masl_url.h"
 void
 UserPostOoaInitializationCalloutf( void )
 {
-  char s[ 1024 ], element[ ESCHER_SYS_MAX_STRING_LEN ], value[ 8 ][ ESCHER_SYS_MAX_STRING_LEN ];
+  char s[ 1024 ], element[ ESCHER_SYS_MAX_STRING_LEN ], value[ 8 ][ ESCHER_SYS_MAX_STRING_LEN ], arg[ ESCHER_SYS_MAX_STRING_LEN ];
   char * p, * q;
   int i, j;
   while ( ( p = fgets( s, 1024, stdin ) ) != NULL ) {
@@ -81,10 +82,14 @@ UserPostOoaInitializationCalloutf( void )
 
     while ( p != NULL ) {
       q = strsep(&p, ",");
-      strcpy( value[ i++ ], q );
+      masl_url_decode( arg, q );
+      strcpy( value[ i++ ], arg );
     }
     masl2xtuml_in_populate( element, value );
   }
+
+  // call the serial interface end signal when we are done reading input from stdin
+  masl2xtuml_in_end();
 
   // For the masl conversion, we have a system, but we don't want that to be the root type during import.
   // Instead, we want the user to create a project, then import this file, so the root types are packages.
