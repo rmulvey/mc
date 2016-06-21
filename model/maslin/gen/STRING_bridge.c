@@ -97,11 +97,17 @@ STRING_substr( const i_t p_begin, const i_t p_end, c_t * p_s )
   // check that the indexes are in a valid range
   i_t begin = p_begin;
   i_t end = p_end;
-  if ( begin < 0 || begin > len - 1 ) {
+  if ( begin > len - 1 ) {
+    return result;
+  }
+  if ( begin < 0 ) {
     begin = 0;
   }
-  if ( end < 1 || end > len ) {
+  if ( end < 0 || end > len ) {
     end = len;
+  }
+  if ( end <= begin ) {
+    return result;
   }
 
   // if we have a string and the end is greater than begin
@@ -139,9 +145,42 @@ STRING_strlen( c_t * p_s )
 i_t
 STRING_indexof( c_t * p_haystack, c_t * p_needle )
 {
-  i_t result = 0;
-  /* Insert your implementation code here... */
-  return result;
+  c_t * a;
+  c_t * b;
+  c_t * c;
+
+  // check arguments
+  if ( !p_needle || !p_haystack ) return -1;
+
+  a = p_haystack;
+  b = p_needle;
+  if (*b == '\0') {
+    return 0;   // if needle is empty string, by definition, the index is 0
+  }
+
+  // seach through to find first character match
+  for ( ; *a != 0; a += 1) {
+    if (*a == *b) {
+
+      // check the rest of the string
+      c = a;
+      while ( *c++ == *b++ ) {
+        if ( *b == '\0' ) {
+          return a - p_haystack;
+        }
+        if ( *c == '\0' ) {
+          break;
+        }
+      }
+
+    }
+
+    // reset b
+    b = p_needle;
+  }
+
+  // no match found
+  return -1;
 }
 
 
