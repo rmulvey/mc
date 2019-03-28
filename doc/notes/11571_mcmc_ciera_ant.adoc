@@ -157,7 +157,7 @@ expressions.
 ==== 4.3.1 Comments in templates
 
 The ciera template mechanism does not support comments in templates. This should
-be added as a feature. <<dr-2>
+be added as a feature. <<dr-2>>
 
 ==== 4.3.2 Partial dumping
 
